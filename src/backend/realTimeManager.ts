@@ -1,18 +1,25 @@
 "use server"
 import Pusher from "pusher";
+import {adjectives, animals, colors, uniqueNamesGenerator} from "unique-names-generator";
+import {redirect} from "next/navigation";
 
 export async function sendRealTimeMessage(formData: FormData) {
-    console.log("Sending real time message", formData.get("randomName"));
+    console.log("Pusher variables", process.env.PUSHER_APP_ID, process.env.PUSHER_KEY, process.env.PUSHER_SECRET, process.env.PUSHER_CLUSTER);
     const pusher = new Pusher({
-        appId: "1896108",
-        key: "981971a5ebfef7ec4460",
-        secret: "4bbd5effffacbf45e650",
-        cluster: "eu",
+        appId: process.env.PUSHER_APP_ID as string,
+        key: process.env.PUSHER_KEY as string,
+        secret: process.env.PUSHER_SECRET as string,
+        cluster: process.env.PUSHER_CLUSTER as string,
         useTLS: true
     });
-    console.log("Data from form", formData.get("repository"));
+    const randomName: string = uniqueNamesGenerator({
+        dictionaries: [adjectives, colors, animals],
+        length: 3,
+        separator: '-',
+    });
     await pusher.trigger("repository-channel", "add-repository", {
         message: formData.get("repository"),
-        randomName: formData.get("randomName")
+        randomName: randomName
     });
+    redirect(`/room/${randomName}`);
 }

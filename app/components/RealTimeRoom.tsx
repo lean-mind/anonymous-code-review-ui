@@ -16,9 +16,12 @@ const RealTimeRoom = () => {
     useEffect(() => {
         Pusher.logToConsole = true;
 
-        const pusher = new Pusher('981971a5ebfef7ec4460', {
-            cluster: 'eu',
+        const pusher = new Pusher(
+            process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
+            cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
         });
+
+        console.log("Pusher variables", process.env.PUSHER_KEY, process.env.PUSHER_CLUSTER);
 
         const channel = pusher.subscribe('repository-channel');
         channel.bind('add-repository', function (data: { message: string, randomName: string }) {
@@ -63,8 +66,8 @@ const RealTimeRoom = () => {
                     <h2 className="text-xl font-semibold mb-2 text-[#39b3c2] flex items-center justify-between">
                         Participantes
                         <span className="bg-[#2A2A2E] px-3 py-1 rounded-full text-sm">
-                {repositoriesByName.length}
-              </span>
+                            {repositoriesByName.length}
+                        </span>
                     </h2>
                     <div className="h-64 overflow-y-auto bg-[#2A2A2E] rounded-lg p-4">
                         <AnimatePresence>

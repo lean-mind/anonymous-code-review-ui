@@ -7,37 +7,23 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import React from "react";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {uniqueNamesGenerator, adjectives, colors, animals} from "unique-names-generator";
 
 
 export default function CodeReviewQuiz() {
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const randomName: string = uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
-            length: 3,
-            separator: '-',
-        });
-        formData.append("randomName", randomName);
-        await sendRealTimeMessage(formData);
-        window.location.href = `/room/${randomName}`; //TODO there is a better way to do this
-    };
-
     return (
         <main className="flex flex-col items-center justify-center min-h-screen bg-[#1C1C1E] p-4">
                 <Card className="w-full max-w-md bg-[#1C1C1E] border-[#2A2A2E] shadow-2xl">
                     <CardHeader>
                         <CardTitle
-                            className="text-3xl font-bold text-center text-[#39b3c2] flex items-center justify-center">
-                            <LinkIcon className="w-8 h-8 mr-2"/>
+                            className="text-3xl font-bold text-center text-[#39b3c2] flex flex-col items-center justify-center">
+                            <LinkIcon className="w-[40px] h-[40px] mb-2"/>
                             Añadir Enlace
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <Label htmlFor="link" className="text-[#39b3c2]">Enlace</Label>
+                        <form action={sendRealTimeMessage} className="space-y-4">
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="link" className="text-lg text-[#39b3c2]">Enlace</Label>
                                 <Input
                                     id="repository"
                                     name="repository"
