@@ -8,11 +8,16 @@ import {redirect} from "next/navigation";
 import {v4 as uuidv4} from 'uuid';
 import {RepositoryManager} from "@/src/backend/repositoryManager";
 
-export async function OpenAnonymousRandomRepositoryServerAction(formData: FormData) {
+export async function openAnonymousRandomRepositoryServerAction(formData: FormData) {
     const urls = formData.get("urls") as string
     const urlList = urls.split("\n").filter(url => url.trim() !== "")
     console.log(urlList)
     await execute(urlList, new GitRepositoryManager());
+}
+
+export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
+    console.log(repositories);
+    // await execute(repositories, new GitRepositoryManager());
 }
 
 export async function execute(repos: string[], repositoryManager: RepositoryManager) {

@@ -1,9 +1,9 @@
-import PusherTest from "@/app/PusherTest";
+import RealTimeRoom from "@/app/RealTimeRoom";
 
 export default function CodeReviewQuiz() {
     return (
-        <main className="flex-1 flex items-center justify-center p-4">
-           <PusherTest/>
+        <main className="flex flex-col items-center justify-center min-h-screen bg-[#1C1C1E] p-4">
+           <RealTimeRoom/>
         </main>
     )
 }

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import {  Code2, Shuffle } from "lucide-react"
-import {OpenAnonymousRandomRepositoryServerAction} from "@/src/backend/server";
+import {openAnonymousRandomRepositoryServerAction} from "@/src/backend/server";
 
 export default function CodeReviewQuiz() {
     return (
@@ -21,7 +21,7 @@ export default function CodeReviewQuiz() {
                         </h2>
                         <p className="text-gray-300">¡Deja que el azar elija tu próxima revisión de código!</p>
                     </div>
-                    <form action={OpenAnonymousRandomRepositoryServerAction} className="space-y-4">
+                    <form action={openAnonymousRandomRepositoryServerAction} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="urls" className="text-lg font-semibold text-gray-300">
                                 URLs de Repositorios

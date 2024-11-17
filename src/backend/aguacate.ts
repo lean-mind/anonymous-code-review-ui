@@ -1,7 +1,7 @@
 "use server"
 import Pusher from "pusher";
 
-export async function SendRealTimeMessage(formData: FormData) {
+export async function sendRealTimeMessage(formData: FormData) {
     const pusher = new Pusher({
         appId: "1896108",
         key: "981971a5ebfef7ec4460",

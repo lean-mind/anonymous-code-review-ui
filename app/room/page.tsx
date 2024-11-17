@@ -1,11 +1,11 @@
 import {Button} from "@/components/ui/button";
 import {Shuffle} from "lucide-react";
-import {SendRealTimeMessage} from "@/src/backend/aguacate";
+import {sendRealTimeMessage} from "@/src/backend/aguacate";
 
 export default function CodeReviewQuiz() {
     return (
         <main className="flex-1 flex items-center justify-center p-4">
-            <form action={SendRealTimeMessage} className="space-y-4">
+            <form action={sendRealTimeMessage} className="space-y-4">
                 <input id="message" name="message" className="px-4 rounded-lg" placeholder={"a pon tu mensaje aqui"}/>
                 <Button
                     type="submit"
