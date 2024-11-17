@@ -2,7 +2,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Pusher from 'pusher-js';
 import {Card, CardContent} from "@/components/ui/card";
-import {Shuffle, Users} from "lucide-react";
+import {Code2, Shuffle} from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
 import {Button} from "@/components/ui/button";
 import {openAnonymousRandomRepositoryServerActionV2} from "@/src/backend/server";
@@ -18,8 +18,8 @@ const RealTimeRoom = () => {
             cluster: 'eu',
         });
 
-        const channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function (data: { message: string }) {
+        const channel = pusher.subscribe('repository-channel');
+        channel.bind('add-repository', function (data: { message: string }) {
             repositoriesRef.current = [...repositoriesRef.current, data.message];
             setRepositories([...repositoriesRef.current]);
         });
@@ -33,7 +33,11 @@ const RealTimeRoom = () => {
 
     const handleSendToServer = async () => {
         try {
-            await openAnonymousRandomRepositoryServerActionV2(repositories); // Llama a la Server Action
+            const url = await openAnonymousRandomRepositoryServerActionV2(repositories);
+
+            if (url) {
+                window.open(url, '_blank');
+            }
         } catch (error) {
             console.error("Error llamando a la Server Action:", error);
         }
@@ -43,8 +47,9 @@ const RealTimeRoom = () => {
         <Card className="w-full max-w-md bg-[#1C1C1E] border-[#2A2A2E] shadow-2xl">
             <CardContent className="p-6">
                 <div className="flex flex-col items-center mb-6">
-                    <div className="w-16 h-16 rounded-full bg-[#39b3c2] flex items-center justify-center mb-4">
-                        <Users className="w-8 h-8 text-white"/>
+                    <div
+                        className="w-20 h-20 bg-gradient-to-br from-gray-700 to-[#39b3c2] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                        <Code2 className="w-10 h-10 text-white"/>
                     </div>
                     <h1 className="text-3xl font-bold text-center text-[#39b3c2]">
                         Sala de Espera

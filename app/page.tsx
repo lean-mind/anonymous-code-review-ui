@@ -1,4 +1,4 @@
-import RealTimeRoom from "@/app/RealTimeRoom";
+import RealTimeRoom from "@/app/components/RealTimeRoom";
 
 export default function CodeReviewQuiz() {
     return (

@@ -9,8 +9,8 @@ export async function sendRealTimeMessage(formData: FormData) {
         cluster: "eu",
         useTLS: true
     });
-    console.log("Data from form", formData.get("message"));
-    await pusher.trigger("my-channel", "my-event", {
-        message: formData.get("message")
+    console.log("Data from form", formData.get("repository"));
+    await pusher.trigger("repository-channel", "add-repository", {
+        message: formData.get("repository")
     });
 }

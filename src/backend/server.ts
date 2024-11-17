@@ -12,12 +12,12 @@ export async function openAnonymousRandomRepositoryServerAction(formData: FormDa
     const urls = formData.get("urls") as string
     const urlList = urls.split("\n").filter(url => url.trim() !== "")
     console.log(urlList)
-    await execute(urlList, new GitRepositoryManager());
+    redirect(await execute(urlList, new GitRepositoryManager()));
 }
 
 export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
     console.log(repositories);
-    // await execute(repositories, new GitRepositoryManager());
+    return await execute(repositories, new GitRepositoryManager());
 }
 
 export async function execute(repos: string[], repositoryManager: RepositoryManager) {
@@ -33,7 +33,7 @@ export async function execute(repos: string[], repositoryManager: RepositoryMana
     await repositoryManager.push(repoPath, newRepoUrl);
     const newRepoDevUrl = createCodeSharingUrl(newRepoUrl);
     console.log(`Redirigiendo a: ${newRepoDevUrl}`);
-    redirect(newRepoDevUrl);
+    return newRepoDevUrl;
 }
 
 async function cloneRepository(repoPath: string, repoName: string, repoUrl: string, repoCloner: RepositoryManager) {
