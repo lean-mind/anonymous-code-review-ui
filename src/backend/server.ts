@@ -25,10 +25,6 @@ export async function deleteAllRepositoriesServerAction() {
     await new GitRepositoryManager().deleteAllReposInOrg("anonymous-code-review");
 }
 
-export async function deleteAllRepositoriesServerAction() {
-    await new GitRepositoryManager().deleteAllReposInOrg("anonymous-code-review");
-}
-
 export async function execute(repos: string[], repositoryManager: RepositoryManager) {
     const tmpDir = os.tmpdir();
     const repoUrl = getRandomFrom(repos);
