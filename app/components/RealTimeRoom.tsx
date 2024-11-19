@@ -9,7 +9,9 @@ import {openAnonymousRandomRepositoryServerActionV2} from "@/src/backend/server"
 
 const RealTimeRoom = () => {
     const [repositories, setRepositories] = useState<string[]>([]);
+    const [repositoriesByName, setRepositoriesByName] = useState<string[]>([]);
     const repositoriesRef = useRef<string[]>([]);
+    const repositoriesByNameRef = useRef<string[]>([]);
 
     useEffect(() => {
         Pusher.logToConsole = true;
@@ -19,9 +21,11 @@ const RealTimeRoom = () => {
         });
 
         const channel = pusher.subscribe('repository-channel');
-        channel.bind('add-repository', function (data: { message: string }) {
+        channel.bind('add-repository', function (data: { message: string, randomName: string }) {
             repositoriesRef.current = [...repositoriesRef.current, data.message];
+            repositoriesByNameRef.current = [...repositoriesByNameRef.current, data.randomName];
             setRepositories([...repositoriesRef.current]);
+            setRepositoriesByName([...repositoriesByNameRef.current]);
         });
 
         return () => {
@@ -59,12 +63,12 @@ const RealTimeRoom = () => {
                     <h2 className="text-xl font-semibold mb-2 text-[#39b3c2] flex items-center justify-between">
                         Participantes
                         <span className="bg-[#2A2A2E] px-3 py-1 rounded-full text-sm">
-                {repositories.length}
+                {repositoriesByName.length}
               </span>
                     </h2>
                     <div className="h-64 overflow-y-auto bg-[#2A2A2E] rounded-lg p-4">
                         <AnimatePresence>
-                            {repositories.map((participant, index) => (
+                            {repositoriesByName.map((participant, index) => (
                                 <motion.div
                                     key={participant}
                                     initial={{opacity: 0, y: 20}}
@@ -87,7 +91,7 @@ const RealTimeRoom = () => {
                     className="w-full bg-gradient-to-r from-gray-700 to-[#39b3c2] hover:from-gray-600 hover:to-[#2a8a96] text-white font-bold py-3 rounded-full transition-all duration-300 transform hover:scale-105"
                     onClick={handleSendToServer}
                 >
-                    <Shuffle className="mr-2 h-5 w-5"/> {repositories.length === 0 ? '¡Comenzando!' : 'Iniciar Code Review'}
+                    <Shuffle className="mr-2 h-5 w-5"/> {repositoriesByName.length === 0 ? '¡Comenzando!' : 'Iniciar Code Review'}
                 </Button>
             </CardContent>
         </Card>
