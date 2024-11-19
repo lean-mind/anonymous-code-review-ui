@@ -15,15 +15,19 @@
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
     "isomorphic-git": "^1.27.1",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "node": "link:isomorphic-git/http/node",
     "octokit": "^4.0.2",
+    "pusher": "^5.2.0",
+    "pusher-js": "8.4.0-rc2",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.1",
