@@ -1,8 +1,8 @@
 import * as git from 'isomorphic-git';
 import http from 'isomorphic-git/http/node';
-import {RepositoryManager} from "@/src/backend/repositoryManager";
 import {Octokit} from "octokit";
 import fs from "fs";
+import {RepositoryManager} from "@/lib/backend/repositoryManager";
 
 export class GitRepositoryManager implements RepositoryManager {
     async clone(url: string, path: string): Promise<void> {

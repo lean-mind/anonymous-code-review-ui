@@ -1,19 +1,14 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {execute} from "@/src/backend/server";
-
-import {RepositoryManager} from "@/src/backend/repositoryManager";
-import {Option} from "@leanmind/monads";
 import os from "os";
 import path from "path";
 import fs from "fs";
-import {redirect} from "next/navigation";
+import {execute} from "@/lib/backend/server";
+import {RepositoryManager} from "@/lib/backend/repositoryManager";
 
 const uuid = "b7ceb64f-442b-467a-ba12-b95d19f12671";
 const repoName = 'Hello-World';
 const remoteRepoUrl = `https://github.com/${repoName}-${uuid}.git`;
-const remoteCodeSharingRepoUrl = `https://github.dev/${repoName}-${uuid}`;
 
-vi.mock("next/navigation");
 vi.mock("uuid", () => ({
     v4: () => uuid
 }));
@@ -43,7 +38,6 @@ describe("Server should", () => {
         expect(mockCloner.clone).toHaveBeenCalledWith(repo, repoPath);
         expect(fs.existsSync(gitRepoPath)).toBeFalsy();
         expect(mockCloner.push).toHaveBeenCalledWith(repoPath, remoteRepoUrl);
-        expect(redirect).toHaveBeenCalledWith(remoteCodeSharingRepoUrl);
     });
 
     it("remove existing repository before cloning", async () => {
@@ -65,7 +59,7 @@ class MockClonerRepository implements RepositoryManager {
     });
 
     createInRemote = vi.fn().mockImplementation(async () => {
-        return Option.of(`${remoteRepoUrl}`);
+        return remoteRepoUrl;
     });
 
     push = vi.fn().mockResolvedValue(undefined);
