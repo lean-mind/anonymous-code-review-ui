@@ -3,18 +3,10 @@
 import os from "os";
 import fs from "fs";
 import path from "path";
-import {GitRepositoryManager} from "@/src/backend/gitRepositoryManager";
-import {redirect} from "next/navigation";
 import {v4 as uuidv4} from 'uuid';
-import {RepositoryManager} from "@/src/backend/repositoryManager";
 import {randomInt} from "node:crypto";
-
-export async function openAnonymousRandomRepositoryServerAction(formData: FormData) {
-    const urls = formData.get("urls") as string
-    const urlList = urls.split("\n").filter(url => url.trim() !== "").map(url => url.replace("\r", ""))
-    console.log(urlList)
-    redirect(await execute(urlList, new GitRepositoryManager()));
-}
+import {GitRepositoryManager} from "@/lib/backend/gitRepositoryManager";
+import {RepositoryManager} from "@/lib/backend/repositoryManager";
 
 export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
     console.log(repositories);

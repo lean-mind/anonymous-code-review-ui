@@ -2,12 +2,10 @@
 
 import {Button} from "@/components/ui/button";
 import {LinkIcon, Shuffle} from "lucide-react";
-import {sendRealTimeMessage} from "@/src/backend/realTimeManager";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import React from "react";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-
+import {sendRealTimeMessage} from "@/lib/backend/realTimeManager";
 
 export default function CodeReviewQuiz() {
     return (
