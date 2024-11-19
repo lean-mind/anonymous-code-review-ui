@@ -9,7 +9,6 @@ import {GitRepositoryManager} from "@/lib/backend/gitRepositoryManager";
 import {RepositoryManager} from "@/lib/backend/repositoryManager";
 
 export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
-    console.log(repositories);
     return await execute(repositories, new GitRepositoryManager());
 }
 
