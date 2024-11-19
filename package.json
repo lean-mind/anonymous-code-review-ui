@@ -25,7 +25,6 @@
     "pusher-js": "8.4.0-rc2",
     "react": "^18",
     "react-dom": "^18",
-    "simple-git": "^3.27.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "unique-names-generator": "^4.7.1"

@@ -1,3 +1,0 @@
-{
-  "buildCommand": "dnf update && dnf install -y git && npm run build"
-}

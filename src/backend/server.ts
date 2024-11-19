@@ -11,7 +11,7 @@ import {randomInt} from "node:crypto";
 
 export async function openAnonymousRandomRepositoryServerAction(formData: FormData) {
     const urls = formData.get("urls") as string
-    const urlList = urls.split("\n").filter(url => url.trim() !== "")
+    const urlList = urls.split("\n").filter(url => url.trim() !== "").map(url => url.replace("\r", ""))
     console.log(urlList)
     redirect(await execute(urlList, new GitRepositoryManager()));
 }
@@ -19,6 +19,10 @@ export async function openAnonymousRandomRepositoryServerAction(formData: FormDa
 export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
     console.log(repositories);
     return await execute(repositories, new GitRepositoryManager());
+}
+
+export async function deleteAllRepositoriesServerAction() {
+    await new GitRepositoryManager().deleteAllReposInOrg("anonymous-code-review");
 }
 
 export async function deleteAllRepositoriesServerAction() {
