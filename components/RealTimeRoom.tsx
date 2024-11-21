@@ -5,7 +5,7 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Code2, Shuffle} from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
 import {Button} from "@/components/ui/button";
-import {openAnonymousRandomRepositoryServerActionV2} from "@/lib/backend/server";
+import {openAnonymousRandomRepositoryServerAction} from "@/lib/backend/server";
 
 const RealTimeRoom = () => {
     const [repositories, setRepositories] = useState<string[]>([]);
@@ -40,7 +40,7 @@ const RealTimeRoom = () => {
 
     const handleSendToServer = async () => {
         try {
-            const url = await openAnonymousRandomRepositoryServerActionV2(repositories);
+            const url = await openAnonymousRandomRepositoryServerAction(repositories);
 
             if (url) {
                 window.open(url, '_blank');

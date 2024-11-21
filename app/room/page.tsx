@@ -17,6 +17,7 @@ export default function CodeReviewQuiz() {
                             <LinkIcon className="w-[40px] h-[40px] mb-2"/>
                             Añadir Enlace
                         </CardTitle>
+                        <p className="text-sm text-center text-[#39b3c2] opacity-85">Solo se permiten repositorios públicos de Github</p>
                     </CardHeader>
                     <CardContent>
                         <form action={sendRealTimeMessage} className="space-y-4">
@@ -28,6 +29,7 @@ export default function CodeReviewQuiz() {
                                     className="bg-[#2A2A2E] text-white border-[#39b3c2] focus:ring-[#39b3c2]"
                                     placeholder="Introduce la Url de tu Repositorio"
                                     type="url"
+                                    pattern="https:\/\/github\.com\/.+\/.+"
                                     required
                                 />
                             </div>

@@ -8,7 +8,7 @@ import {randomInt} from "node:crypto";
 import {GitRepositoryManager} from "@/lib/backend/gitRepositoryManager";
 import {RepositoryManager} from "@/lib/backend/repositoryManager";
 
-export async function openAnonymousRandomRepositoryServerActionV2(repositories: string[]) {
+export async function openAnonymousRandomRepositoryServerAction(repositories: string[]) {
     return await execute(repositories, new GitRepositoryManager());
 }
 
