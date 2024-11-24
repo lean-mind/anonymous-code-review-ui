@@ -1,5 +1,5 @@
 import Pusher, {Channel} from "pusher-js";
-import {RealTimeManager, Repository} from "@/lib/types";
+import {RealTimeManager, Repository} from "@/lib/domain/types";
 
 export class PusherManager implements RealTimeManager<Repository> {
     private pusher: Pusher;

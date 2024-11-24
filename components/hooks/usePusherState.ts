@@ -1,8 +1,9 @@
-// Definimos el tipo del estado almacenado
+"use client"
+
 import {useSyncExternalStore} from 'react';
-import {Repository} from "@/lib/types";
-import {RealTimeStore} from "@/lib/RealTimeStore";
-import {PusherManager} from "@/lib/PusherManager";
+import {Repository} from "@/lib/domain/types";
+import {RealTimeStore} from "@/lib/application/RealTimeStore";
+import {PusherManager} from "@/lib/infrastructure/repositories/PusherManager";
 
 const pusherManager = new PusherManager(
     process.env.NEXT_PUBLIC_PUSHER_KEY as string,

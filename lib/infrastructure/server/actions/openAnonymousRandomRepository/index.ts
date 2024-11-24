@@ -5,18 +5,14 @@ import fs from "fs";
 import path from "path";
 import {v4 as uuidv4} from 'uuid';
 import {randomInt} from "node:crypto";
-import {GitRepositoryManager} from "@/lib/backend/gitRepositoryManager";
-import {RepositoryManager} from "@/lib/backend/repositoryManager";
+import {RepositoryManager} from "@/lib/domain/types";
+import {GitRepositoryManager} from "@/lib/infrastructure/repositories/GitRepositoryManager";
 
-export async function openAnonymousRandomRepositoryServerAction(repositories: string[]) {
-    return await execute(repositories, new GitRepositoryManager());
+export async function openAnonymousRandomRepository(repositories: string[]) {
+    return await generateRandomCodeReviewBy(repositories, new GitRepositoryManager());
 }
 
-export async function deleteAllRepositoriesServerAction() {
-    await new GitRepositoryManager().deleteAllReposInOrg("anonymous-code-review");
-}
-
-export async function execute(repos: string[], repositoryManager: RepositoryManager) {
+export async function generateRandomCodeReviewBy(repos: string[], repositoryManager: RepositoryManager) {
     const tmpDir = os.tmpdir();
     const repoUrl = getRandomFrom(repos);
     const repoName = removeGitExtensionFrom(repoUrl);

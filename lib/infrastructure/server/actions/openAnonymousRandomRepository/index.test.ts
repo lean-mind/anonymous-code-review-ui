@@ -2,8 +2,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import os from "os";
 import path from "path";
 import fs from "fs";
-import {execute} from "@/lib/backend/server";
-import {RepositoryManager} from "@/lib/backend/repositoryManager";
+import {generateRandomCodeReviewBy} from "@/lib/infrastructure/server/actions/openAnonymousRandomRepository";
+import {RepositoryManager} from "@/lib/domain/types";
 
 const uuid = "b7ceb64f-442b-467a-ba12-b95d19f12671";
 const repoName = 'Hello-World';
@@ -33,7 +33,7 @@ describe("Server should", () => {
         const mockCloner = new MockClonerRepository();
         const repo = "https://github.com/octocat/Hello-World";
 
-        await execute([repo], mockCloner);
+        await generateRandomCodeReviewBy([repo], mockCloner);
 
         expect(mockCloner.clone).toHaveBeenCalledWith(repo, repoPath);
         expect(fs.existsSync(gitRepoPath)).toBeFalsy();
@@ -44,7 +44,7 @@ describe("Server should", () => {
         const mockCloner = new MockClonerRepository();
         fs.writeFileSync(path.join(repoPath, "test.txt"), "test");
 
-        await execute(["https://github.com/octocat/Hello-World"], mockCloner);
+        await generateRandomCodeReviewBy(["https://github.com/octocat/Hello-World"], mockCloner);
 
         expect(fs.existsSync(path.join(repoPath, "test.txt"))).toBeFalsy();
     });
