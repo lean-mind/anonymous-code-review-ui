@@ -18,7 +18,7 @@ export async function sendRealTimeMessage(formData: FormData) {
         separator: '-',
     });
     await pusher.trigger("repository-channel", "add-repository", {
-        message: formData.get("repository"),
+        url: formData.get("repository"),
         randomName: randomName
     });
     redirect(`/room/${randomName}`);

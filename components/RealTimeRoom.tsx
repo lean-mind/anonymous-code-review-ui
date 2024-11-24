@@ -1,46 +1,89 @@
 "use client"
-import React, {useEffect, useRef, useState} from 'react';
-import Pusher from 'pusher-js';
+import {useSyncExternalStore} from 'react';
+import Pusher, {Channel} from 'pusher-js';
 import {Card, CardContent} from "@/components/ui/card";
 import {Code2, Shuffle} from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
 import {Button} from "@/components/ui/button";
-import {openAnonymousRandomRepositoryServerAction} from "@/lib/backend/server";
+import {openAnonymousRandomRepositoryServerActionV2} from "@/lib/backend/server";
 
-const RealTimeRoom = () => {
-    const [repositories, setRepositories] = useState<string[]>([]);
-    const [repositoriesByName, setRepositoriesByName] = useState<string[]>([]);
-    const repositoriesRef = useRef<string[]>([]);
-    const repositoriesByNameRef = useRef<string[]>([]);
+// Definimos el tipo del estado almacenado
+interface Repository {
+    url: string;
+    randomName: string;
+}
 
-    useEffect(() => {
-        Pusher.logToConsole = true;
+// Creamos una tienda (store) para gestionar la suscripción y el estado
+const createPusherStore = () => {
+    // Lista de suscriptores (callbacks)
+    let subscribers: Array<(state: Repository[]) => void> = [];
 
-        const pusher = new Pusher(
-            process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
-            cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
-        });
+    // Estado actual que se sincroniza con Pusher
+    let currentState: Repository[] = [];
 
-        console.log("Pusher variables", process.env.PUSHER_KEY, process.env.PUSHER_CLUSTER);
+    // Notificar a todos los suscriptores sobre un cambio en el estado
+    const notifySubscribers = () => {
+        for (const subscriber of subscribers) {
+            subscriber(currentState);
+        }
+    };
 
-        const channel = pusher.subscribe('repository-channel');
-        channel.bind('add-repository', function (data: { message: string, randomName: string }) {
-            repositoriesRef.current = [...repositoriesRef.current, data.message];
-            repositoriesByNameRef.current = [...repositoriesByNameRef.current, data.randomName];
-            setRepositories([...repositoriesRef.current]);
-            setRepositoriesByName([...repositoriesByNameRef.current]);
-        });
-
+    // Función para registrar suscripciones
+    const subscribe = (callback: (state: Repository[]) => void): (() => void) => {
+        subscribers.push(callback);
+        // Retornamos una función de limpieza para desuscribirse
         return () => {
+            subscribers = subscribers.filter((sub) => sub !== callback);
+        };
+    };
+
+    // Función para actualizar el estado cuando llegan nuevos datos desde Pusher
+    const updateState = (newData: Repository) => {
+        currentState = [...currentState, newData];
+        notifySubscribers(); // Notificamos a los suscriptores que el estado cambió
+    };
+
+    // Función para obtener el estado actual
+    const getSnapshot = (): Repository[] => currentState;
+
+    // Configuración de Pusher
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
+    });
+
+    // Suscripción al canal y evento de Pusher
+    const channel: Channel = pusher.subscribe('repository-channel');
+    channel.bind('add-repository', (data: Repository) => {
+        updateState(data); // Actualizamos el estado con los datos recibidos
+    });
+
+    // Retornamos la API de la tienda
+    return {
+        subscribe,
+        getSnapshot,
+        cleanup: () => {
             channel.unbind_all();
             channel.unsubscribe();
             pusher.disconnect();
-        };
-    }, []);
+        },
+    };
+};
+
+// Creamos la tienda Pusher
+const pusherStore = createPusherStore();
+
+// Hook para consumir la tienda Pusher con `useSyncExternalStore`
+const usePusherState = (): Repository[] => {
+    return useSyncExternalStore(pusherStore.subscribe, pusherStore.getSnapshot);
+};
+
+const RealTimeRoom = () => {
+    const repositories = usePusherState();
 
     const handleSendToServer = async () => {
         try {
-            const url = await openAnonymousRandomRepositoryServerAction(repositories);
+            const urls = repositories.map((repository) => repository.url);
+            const url = await openAnonymousRandomRepositoryServerActionV2(urls);
 
             if (url) {
                 window.open(url, '_blank');
@@ -66,14 +109,14 @@ const RealTimeRoom = () => {
                     <h2 className="text-xl font-semibold mb-2 text-[#39b3c2] flex items-center justify-between">
                         Participantes
                         <span className="bg-[#2A2A2E] px-3 py-1 rounded-full text-sm">
-                            {repositoriesByName.length}
+                            {repositories.length}
                         </span>
                     </h2>
                     <div className="h-64 overflow-y-auto bg-[#2A2A2E] rounded-lg p-4">
                         <AnimatePresence>
-                            {repositoriesByName.map((participant, index) => (
+                            {repositories.map((participant, index) => (
                                 <motion.div
-                                    key={participant}
+                                    key={participant.randomName}
                                     initial={{opacity: 0, y: 20}}
                                     animate={{opacity: 1, y: 0}}
                                     exit={{opacity: 0, y: -20}}
@@ -84,7 +127,7 @@ const RealTimeRoom = () => {
                                         className="w-8 h-8 rounded-full bg-[#39b3c2] flex items-center justify-center text-white font-bold mr-3">
                                         {index + 1}
                                     </div>
-                                    <span className="text-gray-200">{participant}</span>
+                                    <span className="text-gray-200">{participant.randomName}</span>
                                 </motion.div>
                             ))}
                         </AnimatePresence>
@@ -94,7 +137,7 @@ const RealTimeRoom = () => {
                     className="w-full bg-gradient-to-r from-gray-700 to-[#39b3c2] hover:from-gray-600 hover:to-[#2a8a96] text-white font-bold py-3 rounded-full transition-all duration-300 transform hover:scale-105"
                     onClick={handleSendToServer}
                 >
-                    <Shuffle className="mr-2 h-5 w-5"/> {repositoriesByName.length === 0 ? '¡Comenzando!' : 'Iniciar Code Review'}
+                    <Shuffle className="mr-2 h-5 w-5"/> {repositories.length === 0 ? '¡Comenzando!' : 'Iniciar Code Review'}
                 </Button>
             </CardContent>
         </Card>
