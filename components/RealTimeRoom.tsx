@@ -1,81 +1,11 @@
 "use client"
-import {useSyncExternalStore} from 'react';
-import Pusher, {Channel} from 'pusher-js';
+
 import {Card, CardContent} from "@/components/ui/card";
 import {Code2, Shuffle} from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
 import {Button} from "@/components/ui/button";
 import {openAnonymousRandomRepositoryServerActionV2} from "@/lib/backend/server";
-
-// Definimos el tipo del estado almacenado
-interface Repository {
-    url: string;
-    randomName: string;
-}
-
-// Creamos una tienda (store) para gestionar la suscripción y el estado
-const createPusherStore = () => {
-    // Lista de suscriptores (callbacks)
-    let subscribers: Array<(state: Repository[]) => void> = [];
-
-    // Estado actual que se sincroniza con Pusher
-    let currentState: Repository[] = [];
-
-    // Notificar a todos los suscriptores sobre un cambio en el estado
-    const notifySubscribers = () => {
-        for (const subscriber of subscribers) {
-            subscriber(currentState);
-        }
-    };
-
-    // Función para registrar suscripciones
-    const subscribe = (callback: (state: Repository[]) => void): (() => void) => {
-        subscribers.push(callback);
-        // Retornamos una función de limpieza para desuscribirse
-        return () => {
-            subscribers = subscribers.filter((sub) => sub !== callback);
-        };
-    };
-
-    // Función para actualizar el estado cuando llegan nuevos datos desde Pusher
-    const updateState = (newData: Repository) => {
-        currentState = [...currentState, newData];
-        notifySubscribers(); // Notificamos a los suscriptores que el estado cambió
-    };
-
-    // Función para obtener el estado actual
-    const getSnapshot = (): Repository[] => currentState;
-
-    // Configuración de Pusher
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
-        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
-    });
-
-    // Suscripción al canal y evento de Pusher
-    const channel: Channel = pusher.subscribe('repository-channel');
-    channel.bind('add-repository', (data: Repository) => {
-        updateState(data); // Actualizamos el estado con los datos recibidos
-    });
-
-    // Retornamos la API de la tienda
-    return {
-        subscribe,
-        getSnapshot,
-        cleanup: () => {
-            channel.unbind_all();
-            channel.unsubscribe();
-            pusher.disconnect();
-        },
-    };
-};
-
-// Creamos la tienda Pusher
-const pusherStore = createPusherStore();
-
-// Hook para consumir la tienda Pusher con `useSyncExternalStore`
-const usePusherState = (): Repository[] => {
-    return useSyncExternalStore(pusherStore.subscribe, pusherStore.getSnapshot);
-};
+import {usePusherState} from "@/components/hooks/usePusherState";
 
 const RealTimeRoom = () => {
     const repositories = usePusherState();
