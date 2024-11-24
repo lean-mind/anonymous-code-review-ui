@@ -2,13 +2,15 @@
 
 import {AnimatePresence, motion} from "framer-motion";
 import {RepositorySubmitButton} from "@/components/forms/RepositorySubmitButton";
-import {usePusherState} from "@/components/hooks/usePusherState";
+import {usePusherState} from "@/hooks/usePusherState";
 import {useTransition} from "react";
 import {openAnonymousRandomRepository} from "@/lib/infrastructure/server/actions";
+import { DeleteAllReposButton } from "@/components/forms/DeleteAllReposButton";
 
 export const RealTimeForm = () => {
     const repositories = usePusherState();
     const [, startTransition] = useTransition();
+    const isLocal = process.env.NODE_ENV === 'development';
 
     const handleSendToServer = async () => {
         startTransition(async () => {
@@ -24,7 +26,7 @@ export const RealTimeForm = () => {
             }
         });
     };
-
+    
     return (
         <>
             <div className="mb-6">
@@ -55,9 +57,12 @@ export const RealTimeForm = () => {
                     </AnimatePresence>
                 </div>
             </div>
-            <form action={handleSendToServer}>
-                <RepositorySubmitButton repositories={repositories}/>
-            </form>
+            <section className="flex">
+                <form action={handleSendToServer} className="w-full">
+                    <RepositorySubmitButton repositories={repositories}/>
+                </form>
+                { isLocal ? <DeleteAllReposButton /> : <></>}
+            </section>
         </>
 )
 }
