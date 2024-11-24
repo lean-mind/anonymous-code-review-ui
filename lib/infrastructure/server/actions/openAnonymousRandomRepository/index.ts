@@ -23,27 +23,21 @@ export async function generateRandomCodeReviewBy(repos: string[], repositoryMana
 
     const newRepoUrl = await repositoryManager.createInRemote(`${repoName}-${uuidv4()}`);
     await repositoryManager.push(repoPath, newRepoUrl);
-    const newRepoDevUrl = createCodeSharingUrl(newRepoUrl);
-    console.log(`Redirigiendo a: ${newRepoDevUrl}`);
-    return newRepoDevUrl;
+    return createCodeSharingUrl(newRepoUrl);
 }
 
 async function cloneRepository(repoPath: string, repoName: string, repoUrl: string, repoCloner: RepositoryManager) {
     if (fs.existsSync(repoPath)) {
         fs.rmSync(repoPath, {recursive: true, force: true});
-        console.log(`Existing repository directory for ${repoName} removed.`);
     }
 
-    console.log(`Cloning repository ${repoUrl}...`);
     await repoCloner.clone(repoUrl, repoPath);
-    console.log(`Repository cloned to: ${repoPath}`);
 }
 
 function makeRepositoryAnonymous(repoPath: string, repoName: string) {
     const gitDir = path.join(repoPath, ".git");
     if (fs.existsSync(gitDir)) {
         fs.rmSync(gitDir, {recursive: true, force: true});
-        console.log(`\`.git\` directory removed for ${repoName}.`);
     } else {
         console.log(`\`.git\` directory does not exist for ${repoName}.`);
     }

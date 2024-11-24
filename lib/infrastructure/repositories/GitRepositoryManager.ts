@@ -34,7 +34,6 @@ export class GitRepositoryManager implements RepositoryManager {
                 auto_init: true,
             });
 
-            console.log('Repositorio creado con éxito:', response.data);
             return response.data.clone_url;
         } catch (error) {
             console.error('Error al crear el repositorio:', error);
@@ -100,8 +99,6 @@ export class GitRepositoryManager implements RepositoryManager {
                 per_page: 100,
             });
 
-            console.log(`Repositorios encontrados en la organización "${org}": ${repos.length}`);
-
             // Eliminar cada repositorio
             for (const repo of repos) {
                 try {
@@ -109,7 +106,6 @@ export class GitRepositoryManager implements RepositoryManager {
                         owner: org,
                         repo: repo.name,
                     });
-                    console.log(`Repositorio eliminado: ${repo.name}`);
                 } catch (error) {
                     console.error(`Error al eliminar el repositorio ${repo.name}:`, error);
                 }

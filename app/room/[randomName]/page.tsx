@@ -3,7 +3,9 @@
 import {AwardIcon} from "lucide-react";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
-export default function CodeReviewQuiz({params}: Readonly<{ params: { randomName: string } }>) {
+type Props = Readonly<{ params: { randomName: string } }>;
+
+export default function CodeReviewQuiz({params}: Props) {
     const randomName = params.randomName;
     return (
         <main className="flex flex-col items-center justify-center min-h-screen bg-[#1C1C1E] p-4">
