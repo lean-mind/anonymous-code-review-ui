@@ -5,7 +5,7 @@ import {LinkIcon, Shuffle} from "lucide-react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {sendRealTimeMessage} from "@/lib/backend/realTimeManager";
+import {sendRealTimeMessageAction} from "@/lib/infrastructure/server/actions";
 
 export default function CodeReviewQuiz() {
     return (
@@ -20,7 +20,7 @@ export default function CodeReviewQuiz() {
                         <p className="text-sm text-center text-[#39b3c2] opacity-85">Solo se permiten repositorios públicos de Github</p>
                     </CardHeader>
                     <CardContent>
-                        <form action={sendRealTimeMessage} className="space-y-4">
+                        <form action={sendRealTimeMessageAction} className="space-y-4">
                             <div className="flex flex-col gap-2">
                                 <Label htmlFor="link" className="text-lg text-[#39b3c2]">Enlace</Label>
                                 <Input

@@ -1,5 +1,5 @@
 import {Channel} from "pusher-js";
-import type { RealTimeManager } from "@/lib/types";
+import type { RealTimeManager } from "@/lib/domain/types";
 
 type EmptyFunction = () => void;
 type Subscribers<T> = (state: T[]) => void;
