@@ -19,6 +19,7 @@ const realTimeStore = new RealTimeStore<Repository>(
 const useRealTimeState = <T>(store: RealTimeStore<T>): T[] => {
     return useSyncExternalStore(
         (callback) => store.subscribe(callback),
+        () => store.getCurrentState(),
         () => store.getCurrentState()
     );
 };
