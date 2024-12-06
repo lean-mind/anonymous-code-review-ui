@@ -30,12 +30,12 @@ export const RealTimeForm = () => {
     return (
         <>
             <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2 text-[#39b3c2] flex items-center justify-between">
+                <h3 className="text-xl font-semibold mb-2 text-[#39b3c2] flex items-center justify-between">
                     Participantes
                     <span className="bg-[#2A2A2E] px-3 py-1 rounded-full text-sm">
                     {repositories.length}
                 </span>
-                </h2>
+                </h3>
                 <div className="h-64 overflow-y-auto bg-[#2A2A2E] rounded-lg p-4">
                     <AnimatePresence>
                         {repositories.map((participant, index) => (

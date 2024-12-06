@@ -12,9 +12,9 @@ export default function CodeReviewQuiz() {
                             className="w-20 h-20 bg-gradient-to-br from-gray-700 to-[#39b3c2] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                             <Code2 className="w-10 h-10 text-white"/>
                         </div>
-                        <h1 className="text-3xl font-bold text-center text-[#39b3c2]">
+                        <h2 className="text-3xl font-bold text-center text-[#39b3c2]">
                             Sala de Espera
-                        </h1>
+                        </h2>
                     </div>
                     <RealTimeForm />
                 </CardContent>
