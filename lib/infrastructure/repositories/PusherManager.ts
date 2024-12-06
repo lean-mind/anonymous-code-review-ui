@@ -5,6 +5,7 @@ export class PusherManager implements RealTimeManager<Repository> {
     private pusher: Pusher;
 
     constructor(key: string, cluster: string) {
+
         this.pusher = new Pusher(key, { cluster });
     }
 
