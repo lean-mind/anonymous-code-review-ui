@@ -20,7 +20,7 @@ export default function CodeReviewQuiz({params}: Props) {
                     <CardContent>
                         <CardDescription className="text-lg font-bold text-center items-center flex flex-col justify-center">
                             <span className="text-white">Tu nombre de usuario es</span>
-                            <span className="text-[#39b3c2]">{randomName}</span>
+                            <span id="randomName" className="text-[#39b3c2]">{randomName}</span>
                         </CardDescription>
                     </CardContent>
                 </Card>
